@@ -189,6 +189,33 @@ TVM_DLL const Op &get_mbarrier();
 TVM_DLL const Op &tma_load();
 
 /*!
+ * \brief tvm intrinsics for DMADescriptor creation for tiled load
+ *
+ * CuTensorMap* create_dma_descriptor(data_type, rank, global_addr,
+ * global_shape..., global_stride..., smem_box..., smem_stride..., interleave,
+ * swizzle, l2_promotion, oob_fill)
+ *
+ */
+TVM_DLL const Op &create_dma_descriptor();
+
+/*!
+ * \brief tvm intrinsics for loading data from global tensor descriptor to
+ * shared memory for DMA
+ *
+
+ *
+ */
+TVM_DLL const Op &dma_load();
+
+/*!
+ * \brief tvm intrinsics for storing data from shared memory to global tensor
+ * descriptor for DMA
+ *
+ *
+ */
+TVM_DLL const Op &dma_store();
+
+/*!
  * \brief tvm intrinsics for loading image from global tensor to columns in
  * shared memory
  *

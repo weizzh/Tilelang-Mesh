@@ -46,6 +46,45 @@ struct TMADesc {
   Array<PrimExpr> EncodeCallArgs() const;
 };
 
+struct DMADesc {
+  int data_type;
+  /*to create memref<1024x1024xf32, #blockwise, #suvm.memory_space<global>>
+  we need:
+  1. data_type
+  2. shape
+  3. layout
+  4. scope
+
+  */
+  size_t src_rank; ///< source Tensor rank (number of dimensions) for example, a
+                   ///< 3D tensor has rank=3
+  Array<PrimExpr>
+      src_shape;     ///< source Tensor shape, for example, a 3D tensor
+                     ///< A:Tensor(128, 256, 512), then shape=[128,256,512]
+  Layout src_layout; ///< Source Tensor Layout
+  StringImm
+      src_scope; ///< Source memory scope e.g.,
+                 ///< "global","shared.asram","shared.wsram","shared.rsram"
+
+  size_t dst_rank;           ///< destination Tensor rank (number of dimensions)
+  Array<PrimExpr> dst_shape; ///< Block shape in shared memory
+  Layout dst_layout;         ///< Destination Tensor Layout
+  StringImm dst_scope;       ///< Destination memory scope
+
+  PrimExpr src_addr; ///< Base address in global memory
+  Array<PrimExpr>
+      coord; // for a 3D tensor A:Tensor(128, 256, 512),we copy A[32:64,
+             // 128:192, 0:256], then the coords = [32, 128, 0]
+
+  PrimExpr dst_addr; ///< Base address in shared memory
+
+  // int oob_fill;                  ///< Out-of-bound fill policy, currently we
+  // don't need this
+
+  /// Encode descriptor fields into runtime call arguments
+  Array<PrimExpr> EncodeCallArgs() const;
+};
+
 /*!
  * \brief Descriptor for TMA-based im2col transformation used in Conv2D.
  *
