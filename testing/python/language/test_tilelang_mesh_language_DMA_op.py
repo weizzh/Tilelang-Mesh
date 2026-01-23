@@ -79,4 +79,5 @@ def matmul_relu_kernel(A_handle: T.handle, B_handle: T.handle, C_handle: T.handl
         T.dma_store(T.region(C_local[0, 0], 1, 128, 128), T.region(C[by * 128, bx * 128], 2, 128, 128), 0)"""
 
 # mul_primfunc.show() # Uncomment to see the generated primfunc
-print(mul_primfunc.script() == expected_result)
+assert mul_primfunc.script(
+) == expected_result, "The output is not as expected. Use mul_primfunc.show() to view the results."
